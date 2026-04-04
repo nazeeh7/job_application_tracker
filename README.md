@@ -14,6 +14,8 @@ The **Job Application Tracker** is a centralized web application designed to hel
 
 *This project was built to demonstrate proficiency in backend development, MVC architecture, and database design using the Spring Boot ecosystem.*
 
+![Screenshot der Job Application Tracker App](./images/Start-Site.png)
+![Screenshot der Job Application Tracker App](./images/add-site.png)
 
 ---
 
