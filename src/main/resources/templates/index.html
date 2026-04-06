@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application Management</title>
+<link rel="stylesheet" th:href="@{/css/output.css}">
+</head>
+<body class="bg-gray-100 min-h-screen text-slate-900">
+
+	<div class="max-w-7xl mx-auto px-6 py-10">
+
+		<!-- Header -->
+		<div
+			class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+
+			<div>
+				<h1 class="text-4xl font-extrabold tracking-tight text-slate-900">
+					Application Management</h1>
+
+				<p class="mt-2 text-lg text-slate-600">
+					<span th:text="${totalApplications}">0</span> Applications total
+				</p>
+			</div>
+
+			<div class="flex items-center gap-3">
+
+				<button
+					class="h-11 w-11 rounded-xl border border-slate-300 bg-white flex items-center justify-center shadow-sm hover:bg-slate-50">
+					<span class="text-lg">🌐</span>
+				</button>
+
+				<a th:href="@{/applications/new}"
+					class="inline-flex items-center gap-3 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800">
+					<span class="text-lg leading-none">+</span> <span>New
+						Application</span>
+				</a>
+
+			</div>
+		</div>
+
+		<!-- Stats -->
+		<div
+			class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+			<div
+				class="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
+				<p class="text-sm text-slate-600">Not Applied</p>
+				<p class="mt-3 text-3xl font-bold text-slate-900"
+					th:text="${notAppliedCount}">0</p>
+			</div>
+
+			<div
+				class="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
+				<p class="text-sm text-slate-600">Applied</p>
+				<p class="mt-3 text-3xl font-bold text-slate-900"
+					th:text="${appliedCount}">0</p>
+			</div>
+
+			<div
+				class="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
+				<p class="text-sm text-slate-600">In Review</p>
+				<p class="mt-3 text-3xl font-bold text-slate-900"
+					th:text="${inReviewCount}">0</p>
+			</div>
+
+			<div
+				class="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
+				<p class="text-sm text-slate-600">Interview Scheduled</p>
+				<p class="mt-3 text-3xl font-bold text-slate-900"
+					th:text="${interviewScheduledCount}">0</p>
+			</div>
+
+			<div
+				class="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
+				<p class="text-sm text-slate-600">Rejected</p>
+				<p class="mt-3 text-3xl font-bold text-slate-900"
+					th:text="${rejectedCount}">0</p>
+			</div>
+
+			<div
+				class="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
+				<p class="text-sm text-slate-600">Accepted</p>
+				<p class="mt-3 text-3xl font-bold text-slate-900"
+					th:text="${acceptedCount}">0</p>
+			</div>
+		</div>
+
+		<!-- Search / Filter -->
+		<form th:action="@{/}" method="get"
+			class="mt-8 rounded-2xl bg-white border border-slate-200 shadow-sm p-4">
+			<div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+
+				<!-- Search Input -->
+				<div class="flex-1">
+					<div
+						class="flex items-center gap-3 rounded-xl bg-slate-100 px-4 py-3 border border-slate-200">
+						<span class="text-slate-400 text-lg">🔍</span> <input type="text"
+							name="query" th:value="${selectedQuery}"
+							placeholder="Search for company or position..."
+							class="w-full bg-transparent outline-none text-slate-700 placeholder:text-slate-400">
+					</div>
+				</div>
+
+				<!-- Status Filter -->
+				<div class="w-full lg:w-64">
+					<select name="status"
+						class="w-full rounded-xl bg-slate-100 px-4 py-3 border border-slate-200 text-slate-700 outline-none">
+						<option value="">All Statuses</option>
+						<option th:each="statusOption : ${statuses}"
+							th:value="${statusOption}" th:text="${statusOption}"
+							th:selected="${statusOption.name() == selectedStatus}">
+						</option>
+					</select>
+				</div>
+
+				<!-- Submit Button -->
+				<div>
+					<button type="submit"
+						class="w-full lg:w-auto inline-flex items-center justify-center rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800">
+						Filter</button>
+				</div>
+
+				<!-- Reset Button -->
+				<div>
+					<a th:href="@{/}"
+						class="w-full lg:w-auto inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm hover:bg-slate-50">
+						Reset </a>
+				</div>
+
+			</div>
+		</form>
+
+		<!-- Applications Table / Empty State -->
+		<div
+			class="mt-8 rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
+
+			<div class="p-10 min-h-[220px] flex items-center justify-center"
+				th:if="${#lists.isEmpty(applications)}">
+				<p class="text-xl text-slate-600 text-center px-6">No
+					applications found.</p>
+			</div>
+
+			<div th:unless="${#lists.isEmpty(applications)}">
+				<table class="min-w-full text-left">
+					<thead class="bg-slate-50 border-b border-slate-200">
+						<tr>
+							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Company</th>
+							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Position</th>
+							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Status</th>
+							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Application
+								Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="jobApp : ${applications}"
+							class="border-b border-slate-100 hover:bg-slate-50">
+							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.company}">Google</td>
+							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.position}">Java
+								Developer</td>
+							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.status}">APPLIED</td>
+							<td class="px-6 py-4 text-slate-800"
+								th:text="${jobApp.applicationDate}">2026-04-04</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+</body>
+</html>
