@@ -7,104 +7,131 @@ import java.time.LocalDate;
 @Table(name = "job_applications")
 public class JobApplication {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String company;
+	@Column(nullable = false)
+	private String company;
 
-    @Column(nullable = false)
-    private String position;
+	@Column(nullable = false)
+	private String position;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ApplicationStatus status;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private ApplicationStatus status = ApplicationStatus.APPLIED;
 
-    @Column(nullable = false)
-    private LocalDate applicationDate;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private ApplicationType applicationType;
 
-    private String contactPerson;
+	@Column(nullable = false)
+	private LocalDate applicationDate;
 
-    private String email;
+	private String contactPerson;
 
-    private String phone;
+	private String email;
 
-    @Column(length = 2000)
-    private String notes;
+	private String phone;
 
-    public JobApplication() {
-    }
+	@Column(length = 2000)
+	private String notes;
 
-    public Long getId() {
-        return id;
-    }
+	@Column(nullable = false)
+	private String address;
+	// TODO
+	//    private String street;
+	//    private String city;
+	//    private String zipCode;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public JobApplication() {
+	}
 
-    public String getCompany() {
-        return company;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setCompany(String company) {
-        this.company = company;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getPosition() {
-        return position;
-    }
+	public String getCompany() {
+		return company;
+	}
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
+	public void setCompany(String company) {
+		this.company = company;
+	}
 
-    public ApplicationStatus getStatus() {
-        return status;
-    }
+	public String getPosition() {
+		return position;
+	}
 
-    public void setStatus(ApplicationStatus status) {
-        this.status = status;
-    }
+	public void setPosition(String position) {
+		this.position = position;
+	}
 
-    public LocalDate getApplicationDate() {
-        return applicationDate;
-    }
+	public ApplicationStatus getStatus() {
+		return status;
+	}
 
-    public void setApplicationDate(LocalDate applicationDate) {
-        this.applicationDate = applicationDate;
-    }
+	public void setStatus(ApplicationStatus status) {
+		this.status = status;
+	}
 
-    public String getContactPerson() {
-        return contactPerson;
-    }
+	public ApplicationType getApplicationType() {
+		return applicationType;
+	}
 
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
-    }
+	public void setApplicationType(ApplicationType applicationType) {
+		this.applicationType = applicationType;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public LocalDate getApplicationDate() {
+		return applicationDate;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setApplicationDate(LocalDate applicationDate) {
+		this.applicationDate = applicationDate;
+	}
 
-    public String getPhone() {
-        return phone;
-    }
+	public String getContactPerson() {
+		return contactPerson;
+	}
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
 
-    public String getNotes() {
-        return notes;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 }

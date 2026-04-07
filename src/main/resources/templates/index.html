@@ -144,22 +144,28 @@
 				<table class="min-w-full text-left">
 					<thead class="bg-slate-50 border-b border-slate-200">
 						<tr>
-							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Company</th>
-							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Position</th>
-							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Status</th>
 							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Application
 								Date</th>
+							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Company</th>
+							<th class="px-6 py-4 text-sm font-semibold text-slate-700">contactPerson</th>
+							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Position</th>
+							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Type
+								Of Application</th>
+							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Status</th>
+
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="jobApp : ${applications}"
 							class="border-b border-slate-100 hover:bg-slate-50">
-							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.company}">Google</td>
-							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.position}">Java
-								Developer</td>
-							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.status}">APPLIED</td>
 							<td class="px-6 py-4 text-slate-800"
 								th:text="${jobApp.applicationDate}">2026-04-04</td>
+							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.company}">Google</td>
+							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.contactPerson}">Max Mustermann</td>
+							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.position}">Java
+								Developer</td>
+							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.applicationType}">Online</td>
+							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.status}">Online</td>
 						</tr>
 					</tbody>
 				</table>

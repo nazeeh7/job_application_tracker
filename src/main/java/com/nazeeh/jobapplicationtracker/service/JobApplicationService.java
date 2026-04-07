@@ -65,4 +65,9 @@ public class JobApplicationService {
         return byCompany;
     }
 
+    public JobApplication findById(Long id) {
+        return jobApplicationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
+    }
+
 }
