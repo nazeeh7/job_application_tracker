@@ -64,7 +64,9 @@ public class JobApplicationController {
 
 	    jobApplicationService.save(existing);
 
-	    return "redirect:/applications";
+	    return "modifyapplichation";
 	}
+	
+	
 
 }

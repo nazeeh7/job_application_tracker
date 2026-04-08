@@ -152,6 +152,8 @@
 							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Type
 								Of Application</th>
 							<th class="px-6 py-4 text-sm font-semibold text-slate-700">Status</th>
+							<th></th>
+
 
 						</tr>
 					</thead>
@@ -161,16 +163,24 @@
 							<td class="px-6 py-4 text-slate-800"
 								th:text="${jobApp.applicationDate}">2026-04-04</td>
 							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.company}">Google</td>
-							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.contactPerson}">Max Mustermann</td>
+							<td class="px-6 py-4 text-slate-800"
+								th:text="${jobApp.contactPerson}">Max Mustermann</td>
 							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.position}">Java
 								Developer</td>
-							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.applicationType}">Online</td>
+							<td class="px-6 py-4 text-slate-800"
+								th:text="${jobApp.applicationType}">Online</td>
 							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.status}">Online</td>
+							<td>
+								<a th:href="@{/applications/update}"
+									class="w-full lg:w-auto inline-flex items-center justify-center rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800">
+									Edit</a>
+							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 
 		</div>
+	</div>
 </body>
 </html>
