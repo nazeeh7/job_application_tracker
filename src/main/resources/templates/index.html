@@ -171,7 +171,7 @@
 								th:text="${jobApp.applicationType}">Online</td>
 							<td class="px-6 py-4 text-slate-800" th:text="${jobApp.status}">Online</td>
 							<td>
-								<a th:href="@{/applications/update}"
+								<a th:href="@{/applications/edit/{id}(id=${jobApp.id})}"
 									class="w-full lg:w-auto inline-flex items-center justify-center rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800">
 									Edit</a>
 							</td>

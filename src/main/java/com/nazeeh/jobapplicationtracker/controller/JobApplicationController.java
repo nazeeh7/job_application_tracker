@@ -30,7 +30,6 @@ public class JobApplicationController {
 		model.addAttribute("rejectedCount", jobApplicationService.getCountByStatus(ApplicationStatus.REJECTED));
 		model.addAttribute("acceptedCount", jobApplicationService.getCountByStatus(ApplicationStatus.ACCEPTED));
 		model.addAttribute("applications", jobApplicationService.getAllApplications());
-		
 
 		model.addAttribute("selectedQuery", query);
 		model.addAttribute("selectedStatus", status);
@@ -54,19 +53,20 @@ public class JobApplicationController {
 		jobApplicationService.save(jobApplication);
 		return "redirect:/";
 	}
-	
-	@PostMapping("/applications/update/{id}")
-	public String updateApplication(@PathVariable Long id, JobApplication updatedApp) {
 
-	    JobApplication existing = jobApplicationService.findById(id);
-
-	    existing.setStatus(updatedApp.getStatus());
-
-	    jobApplicationService.save(existing);
-
-	    return "modifyapplichation";
+	@GetMapping("/applications/edit/{id}")
+	public String updateApplication(@PathVariable Long id, Model model) {
+		JobApplication jobApplication = jobApplicationService.findById(id);
+		model.addAttribute("jobApp", jobApplication);
+		model.addAttribute("applicationStatuses", ApplicationStatus.values());
+		return "update-application";
 	}
 	
-	
+	@PostMapping("/applications/update/{id}")
+	public String updateApplication(@PathVariable Long id,
+	                                @ModelAttribute("jobApplication") JobApplication formApplication) {
 
+	    jobApplicationService.updateApplication(id, formApplication);
+	    return "redirect:/";
+	}
 }

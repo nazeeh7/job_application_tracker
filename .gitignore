@@ -34,3 +34,8 @@ build/
 
 #Node
 node_modules/
+
+data/
+src/app/
+src/main.tsx
+src/styles/

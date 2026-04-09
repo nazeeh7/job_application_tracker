@@ -69,5 +69,40 @@ public class JobApplicationService {
         return jobApplicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
     }
+    
+    public JobApplication updateApplication(Long id, JobApplication formApplication) {
+        JobApplication existingApplication = jobApplicationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
 
+        existingApplication.setCompany(
+                getStringOrDefault(formApplication.getCompany(), existingApplication.getCompany()));
+        existingApplication.setPosition(
+                getStringOrDefault(formApplication.getPosition(), existingApplication.getPosition()));
+        existingApplication.setApplicationType(
+                getOrDefault(formApplication.getApplicationType(), existingApplication.getApplicationType()));
+        existingApplication.setApplicationDate(
+                getOrDefault(formApplication.getApplicationDate(), existingApplication.getApplicationDate()));
+        existingApplication.setContactPerson(
+                getStringOrDefault(formApplication.getContactPerson(), existingApplication.getContactPerson()));
+        existingApplication.setEmail(
+                getStringOrDefault(formApplication.getEmail(), existingApplication.getEmail()));
+        existingApplication.setPhone(
+                getStringOrDefault(formApplication.getPhone(), existingApplication.getPhone()));
+        existingApplication.setAddress(
+                getStringOrDefault(formApplication.getAddress(), existingApplication.getAddress()));
+        existingApplication.setNotes(
+                getStringOrDefault(formApplication.getNotes(), existingApplication.getNotes()));
+        existingApplication.setStatus(
+                getOrDefault(formApplication.getStatus(), existingApplication.getStatus()));
+
+        return jobApplicationRepository.save(existingApplication);
+    }
+
+    private <T> T getOrDefault(T newValue, T oldValue) {
+        return newValue != null ? newValue : oldValue;
+    }
+
+    private String getStringOrDefault(String newValue, String oldValue) {
+        return (newValue != null && !newValue.trim().isEmpty()) ? newValue : oldValue;
+    }
 }
