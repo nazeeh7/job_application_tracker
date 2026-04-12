@@ -74,8 +74,8 @@ public class JobApplicationService {
         JobApplication existingApplication = jobApplicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
 
-        existingApplication.setCompany(
-                getStringOrDefault(formApplication.getCompany(), existingApplication.getCompany()));
+        existingApplication.getCompany().setName(
+                getStringOrDefault(formApplication.getCompany().getName(), existingApplication.getCompany().getName()));
         existingApplication.setPosition(
                 getStringOrDefault(formApplication.getPosition(), existingApplication.getPosition()));
         existingApplication.setApplicationType(
@@ -88,12 +88,13 @@ public class JobApplicationService {
                 getStringOrDefault(formApplication.getEmail(), existingApplication.getEmail()));
         existingApplication.setPhone(
                 getStringOrDefault(formApplication.getPhone(), existingApplication.getPhone()));
-        existingApplication.setAddress(
-                getStringOrDefault(formApplication.getAddress(), existingApplication.getAddress()));
+        existingApplication.getCompany().getAddress().setStreet(
+                getStringOrDefault(formApplication.getCompany().getAddress().getStreet(), existingApplication.getCompany().getAddress().getStreet()));
         existingApplication.setNotes(
                 getStringOrDefault(formApplication.getNotes(), existingApplication.getNotes()));
         existingApplication.setStatus(
                 getOrDefault(formApplication.getStatus(), existingApplication.getStatus()));
+        
 
         return jobApplicationRepository.save(existingApplication);
     }

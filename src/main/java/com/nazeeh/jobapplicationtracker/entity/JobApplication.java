@@ -12,9 +12,6 @@ public class JobApplication {
 	private Long id;
 
 	@Column(nullable = false)
-	private String company;
-
-	@Column(nullable = false)
 	private String position;
 
 	@Enumerated(EnumType.STRING)
@@ -37,13 +34,6 @@ public class JobApplication {
 	@Column(length = 2000)
 	private String notes;
 
-	@Column(nullable = false)
-	private String address;
-	// TODO
-	//    private String street;
-	//    private String city;
-	//    private String zipCode;
-
 	public JobApplication() {
 	}
 
@@ -55,17 +45,13 @@ public class JobApplication {
 		this.id = id;
 	}
 
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
 	public String getPosition() {
 		return position;
 	}
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "company_id")
+	private Company company;
 
 	public void setPosition(String position) {
 		this.position = position;
@@ -127,11 +113,14 @@ public class JobApplication {
 		this.notes = notes;
 	}
 
-	public String getAddress() {
-		return address;
+	public Company getCompany() {
+		return company;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setCompany(Company company) {
+		this.company = company;
 	}
+	
+	
+
 }
