@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Delete</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+</head>
+<body class="bg-slate-100 text-slate-900">
+
+    <div class="mx-auto mt-16 max-w-2xl rounded-2xl bg-white p-8 shadow-sm">
+        <h1 class="mb-6 text-2xl font-bold text-slate-900">Confirm Deletion</h1>
+
+        <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">
+            <p class="font-semibold">Warning:</p>
+            <p>This action will permanently delete the application.</p>
+        </div>
+
+        <div class="mb-6 space-y-2 text-sm text-slate-700">
+            <p>
+                <span class="font-semibold">Company:</span>
+                <span th:text="${jobApp.company.name}"></span>
+            </p>
+            <p>
+                <span class="font-semibold">Position:</span>
+                <span th:text="${jobApp.position}"></span>
+            </p>
+        </div>
+
+        <p class="mb-3 text-sm text-slate-700">
+            To confirm deletion, type the exact position:
+            <span class="font-semibold text-slate-900" th:text="${jobApp.position}"></span>
+        </p>
+
+        <div th:if="${error}" class="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-700">
+            <p th:text="${error}"></p>
+        </div>
+
+        <form th:action="@{/applications/delete/{id}(id=${jobApp.id})}" method="post" class="space-y-4">
+            <input type="text"
+                   name="positionConfirmation"
+                   placeholder="Type the exact position"
+                   required
+                   class="h-11 w-full rounded-xl border border-slate-200 bg-slate-100 px-4 text-[15px] text-slate-800 placeholder:text-slate-400 outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200">
+
+            <div class="flex justify-between pt-2">
+                <a th:href="@{/applications/edit/{id}(id=${jobApp.id})}"
+                   class="inline-flex h-10 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-900 hover:bg-slate-50">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="inline-flex h-10 items-center justify-center rounded-xl bg-red-700 px-6 text-sm font-semibold text-white shadow-sm hover:bg-red-800">
+                    Confirm Delete
+                </button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

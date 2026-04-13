@@ -106,4 +106,9 @@ public class JobApplicationService {
     private String getStringOrDefault(String newValue, String oldValue) {
         return (newValue != null && !newValue.trim().isEmpty()) ? newValue : oldValue;
     }
+
+	public void deleteApplication(Long id) {
+		jobApplicationRepository.deleteById(id);
+		
+	}
 }

@@ -61,12 +61,34 @@ public class JobApplicationController {
 		model.addAttribute("applicationStatuses", ApplicationStatus.values());
 		return "update-application";
 	}
-	
+
 	@PostMapping("/applications/update/{id}")
 	public String updateApplication(@PathVariable Long id,
-	                                @ModelAttribute("jobApplication") JobApplication formApplication) {
+			@ModelAttribute("jobApplication") JobApplication formApplication) {
 
-	    jobApplicationService.updateApplication(id, formApplication);
-	    return "redirect:/";
+		jobApplicationService.updateApplication(id, formApplication);
+		return "redirect:/";
+	}
+
+	@GetMapping("/applications/delete/confirm/{id}")
+	public String showDeleteConfirmation(@PathVariable Long id, Model model) {
+		JobApplication jobApp = jobApplicationService.findById(id);
+		model.addAttribute("jobApp", jobApp);
+		return "delete-confirmation";
+	}
+
+	@PostMapping("/applications/delete/{id}")
+	public String deleteApplication(@PathVariable Long id,
+			@RequestParam("positionConfirmation") String positionConfirmation, Model model) {
+
+		JobApplication jobApp = jobApplicationService.findById(id);
+
+		if (!jobApp.getPosition().equals(positionConfirmation)) {
+			model.addAttribute("jobApp", jobApp);
+			model.addAttribute("error", "The entered position does not match.");
+			return "delete-confirmation";
+		}
+		jobApplicationService.deleteApplication(id);
+		return "redirect:/";
 	}
 }
