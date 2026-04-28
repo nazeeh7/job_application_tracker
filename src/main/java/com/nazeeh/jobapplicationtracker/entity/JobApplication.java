@@ -33,6 +33,10 @@ public class JobApplication {
 
 	@Column(length = 2000)
 	private String notes;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
 	public JobApplication() {
 	}
@@ -120,6 +124,15 @@ public class JobApplication {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
 	
 	
 

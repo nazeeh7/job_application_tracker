@@ -1,5 +1,6 @@
 package com.nazeeh.jobapplicationtracker.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,22 +19,23 @@ public class JobApplicationController {
 		this.jobApplicationService = jobApplicationService;
 	}
 
-	@GetMapping("/")
-	public String overview(@RequestParam(required = false) String query, @RequestParam(required = false) String status,
+	@GetMapping("/applications")
+	public String overview(@RequestParam(required = false) String query, @RequestParam(required = false) String status,Authentication authentication,
 			Model model) {
-		model.addAttribute("totalApplications", jobApplicationService.getTotalApplications());
-		model.addAttribute("notAppliedCount", jobApplicationService.getCountByStatus(ApplicationStatus.NOT_APPLIED));
-		model.addAttribute("appliedCount", jobApplicationService.getCountByStatus(ApplicationStatus.APPLIED));
-		model.addAttribute("inReviewCount", jobApplicationService.getCountByStatus(ApplicationStatus.IN_REVIEW));
+		String email = authentication.getName();
+		model.addAttribute("totalApplications", jobApplicationService.getTotalApplicationsForUser(authentication.getName()));
+		model.addAttribute("notAppliedCount", jobApplicationService.getCountByStatusForUser(ApplicationStatus.NOT_APPLIED, authentication.getName()));
+		model.addAttribute("appliedCount", jobApplicationService.getCountByStatusForUser(ApplicationStatus.APPLIED, authentication.getName()));
+		model.addAttribute("inReviewCount", jobApplicationService.getCountByStatusForUser(ApplicationStatus.IN_REVIEW, authentication.getName()));
 		model.addAttribute("interviewScheduledCount",
-				jobApplicationService.getCountByStatus(ApplicationStatus.INTERVIEW_SCHEDULED));
-		model.addAttribute("rejectedCount", jobApplicationService.getCountByStatus(ApplicationStatus.REJECTED));
-		model.addAttribute("acceptedCount", jobApplicationService.getCountByStatus(ApplicationStatus.ACCEPTED));
-		model.addAttribute("applications", jobApplicationService.getAllApplications());
+				jobApplicationService.getCountByStatusForUser(ApplicationStatus.INTERVIEW_SCHEDULED, authentication.getName()));
+		model.addAttribute("rejectedCount", jobApplicationService.getCountByStatusForUser(ApplicationStatus.REJECTED, authentication.getName()));
+		model.addAttribute("acceptedCount", jobApplicationService.getCountByStatusForUser(ApplicationStatus.ACCEPTED, authentication.getName()));
 
 		model.addAttribute("selectedQuery", query);
 		model.addAttribute("selectedStatus", status);
 		model.addAttribute("statuses", ApplicationStatus.values());
+		model.addAttribute("applications", jobApplicationService.getApplicationsForUser(email));
 
 		return "index";
 	}
@@ -49,46 +51,61 @@ public class JobApplicationController {
 	}
 
 	@PostMapping("/applications")
-	public String createApplication(JobApplication jobApplication) {
-		jobApplicationService.save(jobApplication);
-		return "redirect:/";
+	public String createApplication(JobApplication jobApplication, Authentication authentication) {
+		jobApplicationService.saveForUser(jobApplication, authentication.getName());
+		return "redirect:/applications";
 	}
 
 	@GetMapping("/applications/edit/{id}")
-	public String updateApplication(@PathVariable Long id, Model model) {
-		JobApplication jobApplication = jobApplicationService.findById(id);
-		model.addAttribute("jobApp", jobApplication);
-		model.addAttribute("applicationStatuses", ApplicationStatus.values());
-		return "update-application";
+	public String updateApplication(@PathVariable Long id,
+	                                Authentication authentication,
+	                                Model model) {
+
+	    JobApplication jobApplication =
+	        jobApplicationService.findByIdAndUserEmail(id, authentication.getName());
+
+	    model.addAttribute("jobApp", jobApplication);
+	    model.addAttribute("applicationStatuses", ApplicationStatus.values());
+
+	    return "update-application";
 	}
 
 	@PostMapping("/applications/update/{id}")
 	public String updateApplication(@PathVariable Long id,
-			@ModelAttribute("jobApplication") JobApplication formApplication) {
+			@ModelAttribute("jobApplication") JobApplication formApplication, Authentication authentication) {
 
-		jobApplicationService.updateApplication(id, formApplication);
-		return "redirect:/";
+		jobApplicationService.updateApplication(id, formApplication, authentication.getName());
+		return "redirect:/applications";
 	}
 
 	@GetMapping("/applications/delete/confirm/{id}")
-	public String showDeleteConfirmation(@PathVariable Long id, Model model) {
-		JobApplication jobApp = jobApplicationService.findById(id);
-		model.addAttribute("jobApp", jobApp);
-		return "delete-confirmation";
+	public String showDeleteConfirmation(@PathVariable Long id,
+	                                     Authentication authentication,
+	                                     Model model) {
+
+	    JobApplication jobApp =
+	        jobApplicationService.findByIdAndUserEmail(id, authentication.getName());
+
+	    model.addAttribute("jobApp", jobApp);
+	    return "delete-confirmation";
 	}
 
 	@PostMapping("/applications/delete/{id}")
 	public String deleteApplication(@PathVariable Long id,
-			@RequestParam("positionConfirmation") String positionConfirmation, Model model) {
+	                               @RequestParam("positionConfirmation") String positionConfirmation,
+	                               Authentication authentication,
+	                               Model model) {
 
-		JobApplication jobApp = jobApplicationService.findById(id);
+	    JobApplication jobApp =
+	        jobApplicationService.findByIdAndUserEmail(id, authentication.getName());
 
-		if (!jobApp.getPosition().equals(positionConfirmation)) {
-			model.addAttribute("jobApp", jobApp);
-			model.addAttribute("error", "The entered position does not match.");
-			return "delete-confirmation";
-		}
-		jobApplicationService.deleteApplication(id);
-		return "redirect:/";
+	    if (!jobApp.getPosition().equals(positionConfirmation)) {
+	        model.addAttribute("jobApp", jobApp);
+	        model.addAttribute("error", "The entered position does not match.");
+	        return "delete-confirmation";
+	    }
+
+	    jobApplicationService.deleteApplicationForUser(id, authentication.getName());
+	    return "redirect:/applications";
 	}
 }
