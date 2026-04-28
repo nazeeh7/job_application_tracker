@@ -2,7 +2,9 @@ package com.nazeeh.jobapplicationtracker.service;
 
 import com.nazeeh.jobapplicationtracker.entity.ApplicationStatus;
 import com.nazeeh.jobapplicationtracker.entity.JobApplication;
+import com.nazeeh.jobapplicationtracker.entity.User;
 import com.nazeeh.jobapplicationtracker.repository.JobApplicationRepository;
+import com.nazeeh.jobapplicationtracker.repository.UserRepository;
 
 import java.util.List;
 
@@ -12,26 +14,32 @@ import org.springframework.stereotype.Service;
 public class JobApplicationService {
 
 	private final JobApplicationRepository jobApplicationRepository;
+	
+	private final UserRepository userRepository;
 
-	public JobApplicationService(JobApplicationRepository repository) {
+	public JobApplicationService(JobApplicationRepository repository,UserRepository userRepository ) {
 		this.jobApplicationRepository = repository;
+		this.userRepository = userRepository;
 	}
 
-	public long getTotalApplications() {
-		return jobApplicationRepository.count();
+	public long getTotalApplicationsForUser(String email) {
+		return jobApplicationRepository.countByUserEmail(email);
 	}
 
-	public long getCountByStatus(ApplicationStatus status) {
-		return jobApplicationRepository.countByStatus(status);
+	public long getCountByStatusForUser(ApplicationStatus status, String email) {
+		return jobApplicationRepository.countByStatusAndUserEmail(status, email);
 	}
 	
-	public List<JobApplication> getAllApplications() {
-	    return jobApplicationRepository.findAll();
+
+	public JobApplication saveForUser(JobApplication jobApplication, String email) {
+
+	    User user = userRepository.findByEmail(email)
+	            .orElseThrow(() -> new RuntimeException("User not found"));
+
+	    jobApplication.setUser(user);
+
+	    return jobApplicationRepository.save(jobApplication);
 	}
-	
-    public JobApplication save(JobApplication jobApplication) {
-        return jobApplicationRepository.save(jobApplication);
-    }
     
     public List<JobApplication> searchApplications(String query, String status) {
         boolean hasQuery = query != null && !query.trim().isEmpty();
@@ -65,13 +73,9 @@ public class JobApplicationService {
         return byCompany;
     }
 
-    public JobApplication findById(Long id) {
-        return jobApplicationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Application not found"));
-    }
     
-    public JobApplication updateApplication(Long id, JobApplication formApplication) {
-        JobApplication existingApplication = jobApplicationRepository.findById(id)
+    public JobApplication updateApplication(Long id, JobApplication formApplication, String email) {
+        JobApplication existingApplication = jobApplicationRepository.findByIdAndUserEmail(id, email)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
 
         existingApplication.getCompany().setName(
@@ -107,8 +111,19 @@ public class JobApplicationService {
         return (newValue != null && !newValue.trim().isEmpty()) ? newValue : oldValue;
     }
 
-	public void deleteApplication(Long id) {
-		jobApplicationRepository.deleteById(id);
+    public void deleteApplicationForUser(Long id, String email) {
+        JobApplication app = findByIdAndUserEmail(id, email);
+        jobApplicationRepository.delete(app);
+    }
+
+	public List<JobApplication> getApplicationsForUser(String email) {
 		
+		return jobApplicationRepository.findByUserEmail(email);
 	}
+	
+	public JobApplication findByIdAndUserEmail(Long id, String email) {
+	    return jobApplicationRepository.findByIdAndUserEmail(id, email)
+	        .orElseThrow(() -> new RuntimeException("Not found"));
+	}
+
 }
