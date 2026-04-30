@@ -39,5 +39,3 @@ data/
 src/app/
 src/main.tsx
 src/styles/
-
-src/main/java/com/nazeeh/jobapplicationtracker/config/
