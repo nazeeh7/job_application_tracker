@@ -7,7 +7,7 @@ FROM eclipse-temurin:21-jdk-jammy AS build
 WORKDIR /build
 
 # Copy Maven wrapper files
-COPY mvnw .
+COPY --chmod=0755 mvnw .
 COPY .mvn .mvn
 
 # Copy the Maven project file
